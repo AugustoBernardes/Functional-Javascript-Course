@@ -1,0 +1,1 @@
+      resolve(files.map(file => path.join(filePath,file)))
