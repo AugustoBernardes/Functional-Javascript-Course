@@ -78,17 +78,23 @@ function separeteTextBy(symbol){
 }
 
 function groupSameWords(words){
-    return words.reduce((grouping, word) => {
-        const p = word.toLowerCase()
-        if(grouping[p]){
-            grouping[p] += 1
-        }else{
-            grouping[p] = 1
-        }
+    return Object.values(words.reduce((accumulator, word) => {
+        const element = word.toLowerCase()
+        const quantity = accumulator[element] ? accumulator[element].quantity + 1 : 1
+        accumulator[element] = { element: element, quantity }
 
-        return grouping
-    },{})
+        return accumulator
+    },{}))
 
+}
+
+function orderByNumericAtribute(attr, order = 'asc'){
+    return function(array){
+        const asc = (o1, o2) => o1[attr] - o2[attr]
+        const desc = (o1, o2) => o2[attr] - o1[attr]
+
+        return array.sort(order === 'asc' ? asc : desc)
+    }
 }
 
 
@@ -103,5 +109,6 @@ module.exports = {
     removeSymbols,
     mixContent,
     separeteTextBy,
-    groupSameWords
+    groupSameWords,
+    orderByNumericAtribute
 }

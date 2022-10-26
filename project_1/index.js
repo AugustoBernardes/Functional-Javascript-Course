@@ -6,7 +6,7 @@ const dataPath = path.join(__dirname,'./subtitles')
 const symbols = [
     '♪', '.', '-',',', '"',
     '_','<i>','</i>', '\r',
-    '[',']','(',')'
+    '[',']','(',')','\n'
 ]
 
 fn.readFolder(dataPath)
@@ -22,5 +22,6 @@ fn.readFolder(dataPath)
     .then(fn.separeteTextBy(' '))
     .then(fn.removeIfEmpty)
     .then(fn.groupSameWords)
+    .then(fn.orderByNumericAtribute('quantity', 'desc'))
     .then(console.log)
 
