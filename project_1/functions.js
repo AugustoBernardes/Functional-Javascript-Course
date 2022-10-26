@@ -33,14 +33,64 @@ function removeIfEmpty(array){
     return array.filter(element => element.trim())
 }
 
-function elementsEndingWith(array,pattern){
-    return array.filter(element => element.endsWith(pattern))
+function elementsEndingWith(pattern){
+    return function (array){
+        return array.filter(element => element.endsWith(pattern))
+    }
 }
 
-function removeIfIncludes(lines, textPattern){
-    return lines.filter(element => !element.includes(textPattern))
+function removeIfIncludes(textPattern){
+    return function(lines){
+        return lines.filter(element => !element.includes(textPattern))
+    }
 
 }
+
+function removeLinesIfHaveOnlyNumbers(lines){
+    return lines.filter(element => {
+        const num = parseInt(element.trim())
+
+        return num !== num
+    })
+}
+
+function removeSymbols(symbols){
+    return function(lines){
+        return lines.map(element => {
+            let textWithoutSymbols = element
+            symbols.forEach(symbol => {
+                textWithoutSymbols = textWithoutSymbols.split(symbol).join('')
+            })
+
+            return textWithoutSymbols
+        })
+    }
+
+}
+
+
+const mixContent = contents => contents.join('\n')
+
+function separeteTextBy(symbol){
+    return function(text){
+        return text.split(symbol)
+    }
+}
+
+function groupSameWords(words){
+    return words.reduce((grouping, word) => {
+        const p = word.toLowerCase()
+        if(grouping[p]){
+            grouping[p] += 1
+        }else{
+            grouping[p] = 1
+        }
+
+        return grouping
+    },{})
+
+}
+
 
 module.exports = {
     readFolder,
@@ -48,5 +98,10 @@ module.exports = {
     readFiles,
     elementsEndingWith,
     removeIfIncludes,
-    removeIfEmpty
+    removeIfEmpty,
+    removeLinesIfHaveOnlyNumbers,
+    removeSymbols,
+    mixContent,
+    separeteTextBy,
+    groupSameWords
 }

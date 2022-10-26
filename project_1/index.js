@@ -3,12 +3,24 @@ const fn = require('./functions')
 
 const dataPath = path.join(__dirname,'./subtitles')
 
+const symbols = [
+    '♪', '.', '-',',', '"',
+    '_','<i>','</i>', '\r',
+    '[',']','(',')'
+]
+
 fn.readFolder(dataPath)
-    .then(pathFiles => fn.elementsEndingWith(pathFiles, '.srt'))
+    .then(fn.elementsEndingWith('.srt'))
     .then(filesSRT => fn.readFiles(filesSRT))
-    .then(contents => contents.join('\n'))
-    .then(allContent => allContent.split('\n'))
-    .then(lines => fn.removeIfEmpty(lines))
-    .then(lines => fn.removeIfIncludes(lines, '-->'))
+    .then(fn.mixContent)
+    .then(fn.separeteTextBy('\n'))
+    .then(fn.removeIfEmpty)
+    .then(fn.removeIfIncludes('-->'))
+    .then(fn.removeLinesIfHaveOnlyNumbers)
+    .then(fn.removeSymbols(symbols))
+    .then(fn.mixContent)
+    .then(fn.separeteTextBy(' '))
+    .then(fn.removeIfEmpty)
+    .then(fn.groupSameWords)
     .then(console.log)
 
